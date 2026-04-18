@@ -12,17 +12,46 @@
       environment.pathsToLink = [ "/libexec" ]; # links /libexec from derivations to /run/current-system/sw
   environment.systemPackages = with pkgs; [
   	lua
+	vscode
  	fastfetch
 	neovim
-	#i3
 	alacritty
 	unzip
 	zip
 	git
 	acpi
+	rustup
   ];
 
-  programs.xss-lock.enable = true;
+  services.flatpak.enable = true;
+
+  xdg.portal = {
+    enable = true;
+    extraPortals = with pkgs; [
+      xdg-desktop-portal-gtk
+    ];
+  };
+
+
+  users.users."a_" = {
+    packages = with pkgs; [
+      flatpak
+    ];
+  };
+
+  programs = {
+    gnupg.agent = {
+      enable = true;
+      enableSSHSupport = false;
+      settings = {
+        default-cache-ttl = 2592000;
+        max-cache-ttl = 2592000;
+      };
+    };
+  };
+
+  nixpkgs.config.allowUnfree = true;
+
   programs.zsh.enable = true;
 
   users.extraUsers.a_ = {
@@ -32,14 +61,16 @@
   };
 
   # Use the GRUB 2 boot loader.
-  boot.loader.grub.enable = true;
+  # boot.loader.grub.enable = true;
   # boot.loader.grub.efiSupport = true;
   # boot.loader.grub.efiInstallAsRemovable = true;
   # boot.loader.efi.efiSysMountPoint = "/boot/efi";
   # Define on which hard drive you want to install Grub.
-  boot.loader.grub.device = "/dev/disk/by-id/ata-HGST_HTS725032A7E630_TF0400Y131LZUT"; # or "nodev" for efi only
+  # boot.loader.grub.device = "/dev/disk/by-id/ata-ST2000DM008-2FR102_ZFL6752S-part1";
 
-  networking.hostId = "cce9b3e1";
+  boot.loader.systemd-boot.enable = true;
+
+  networking.hostId = "c7a5e39a";
 
   # networking.hostName = "nixos"; # Define your hostname.
 
@@ -157,6 +188,8 @@
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
+
+  services.zfs.autoSnapshot.enable = true;
 
   # Copy the NixOS configuration file and link it from the resulting system
   # (/run/current-system/configuration.nix). This is useful in case you
