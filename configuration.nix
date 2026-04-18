@@ -22,6 +22,24 @@
 	acpi
   ];
 
+  xdg.portal = {
+    enable = true;
+    extraPortals = with pkgs; [
+      xdg-desktop-portal-gtk
+    ];
+  };
+
+   programs = {
+    gnupg.agent = {
+      enable = true;
+      enableSSHSupport = false;
+      settings = {
+        default-cache-ttl = 2592000;
+        max-cache-ttl = 2592000;
+      };
+    };
+  };
+
   programs.xss-lock.enable = true;
   programs.zsh.enable = true;
 
