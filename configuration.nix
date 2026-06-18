@@ -20,7 +20,14 @@
 	zip
 	git
 	acpi
+	vscode
   ];
+
+   nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
+      "vscode"
+    ];
+
+  services.flatpak.enable = true;
 
   xdg.portal = {
     enable = true;
@@ -199,6 +206,33 @@
   #
   # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
   system.stateVersion = "25.11"; # Did you read the comment?
+
+  programs.nix-ld.enable = true;
+    programs.nix-ld.libraries = with pkgs; [
+    # Add any missing dynamic libraries for unpackaged programs
+    # here, NOT in environment.systemPackages
+        # General libraries
+    stdenv.cc.cc
+  zlib
+  openssl
+  xorg.libX11
+  xorg.libXcursor
+  xorg.libXi
+  xorg.libXrandr
+  xorg.libXrender
+  xorg.libXext
+  libGL
+  fontconfig
+  vulkan-loader
+  alsa-lib
+  pulseaudio
+  udev
+  icu
+  icu.dev
+  mono
+    # Add other dependencies if Godot complains, such as
+    # zlib, openssl, xz, util-linux
+  ];
 
   # boot.zfs.extraPools = [ "zpool" ];
 }
