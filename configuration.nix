@@ -6,11 +6,17 @@
 
 {
   imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-    ];
-      environment.pathsToLink = [ "/libexec" ]; # links /libexec from derivations to /run/current-system/sw
+	[ # Include the results of the hardware scan.
+		./hardware-configuration.nix
+	];
+
+  environment.pathsToLink = [ "/libexec" ]; # links /libexec from derivations to /run/current-system/sw
   environment.systemPackages = with pkgs; [
+  	caffeine-ng
+	wget
+  	zed-editor
+	python3
+	seahorse
   	lua
 	vscode
  	fastfetch
@@ -19,8 +25,55 @@
 	unzip
 	zip
 	git
+	gnome-software
 	acpi
+	steam
 	rustup
+	nodejs
+  ];
+
+  security.pam.services.greetd.enableGnomeKeyring = true;
+  security.pam.services.cosmic-greeter.enableGnomeKeyring = true;
+
+  boot.kernelModules = [ "nouveau" "i2c-dev" "i2c-piix4" ];
+
+  services.hardware.openrgb.enable = true;
+
+  boot.blacklistedKernelModules = [ "nvidia" "nvidia_uvm" "nvidia_drm" "nvidia_modeset" ];
+	
+  services.udev.enable = true;
+  services.xserver = {
+    enable = true;
+    videoDrivers = [ "nouveau" ];
+
+    # Optional: Configure display settings, if necessary
+    # displayManager = {
+    #   ...
+    # };
+    # desktopManager = {
+    #   ...
+    # };
+  };
+
+  # Enable hardware acceleration for Nouveau
+  hardware.graphics = {
+    enable = true;
+    extraPackages = with pkgs; [
+      # Add packages needed for Nouveau acceleration here
+      # For example, Mesa for OpenGL:
+      mesa
+    ];
+  };
+
+  # Additional configurations if required
+  # For example, to manage power settings for Nouveau:
+  # environment.etc."modprobe.d/nouveau.conf".text = ''
+  #   options nouveau modeset=1
+  # '';
+
+  nix.settings.experimental-features = [
+  	"nix-command"
+  	"flakes"
   ];
 
   services.flatpak.enable = true;
@@ -38,6 +91,21 @@
       flatpak
     ];
   };
+
+  programs.nix-ld.enable = true;
+  programs.nix-ld.libraries = with pkgs; [
+  	shaderc
+	libxcb
+	wayland
+    	libxkbcommon
+    	xorg.libX11
+    	xorg.libXcursor
+    	xorg.libXi
+    	xorg.libXrandr
+    	fontconfig
+    	freetype
+	vulkan-loader
+  ];
 
   programs = {
     gnupg.agent = {
