@@ -11,6 +11,7 @@
     ];
       environment.pathsToLink = [ "/libexec" ]; # links /libexec from derivations to /run/current-system/sw
   environment.systemPackages = with pkgs; [
+  	zed-editor
   	lua
  	fastfetch
 	neovim
@@ -22,6 +23,15 @@
 	acpi
 	vscode
   ];
+
+   boot.kernelModules = [ "nouveau" "i2c-dev" "i2c-piix4" ];
+   boot.blacklistedKernelModules = [ "nvidia" "nvidia_uvm" "nvidia_drm" "nvidia_modeset" ];
+
+  nix.settings.experimental-features = [
+  	"nix-command"
+  	"flakes"
+  ];
+
 
    nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
       "vscode"
@@ -35,6 +45,8 @@
       xdg-desktop-portal-gtk
     ];
   };
+
+
 
    programs = {
     gnupg.agent = {
