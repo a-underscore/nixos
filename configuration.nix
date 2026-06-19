@@ -18,7 +18,6 @@
 	python3
 	seahorse
   	lua
-	vscode
  	fastfetch
 	neovim
 	alacritty
@@ -27,13 +26,15 @@
 	git
 	gnome-software
 	acpi
-	steam
 	rustup
 	nodejs
+  	wireguard-tools
+	networkmanager-openvpn
+	protonvpn-gui
   ];
-
-  security.pam.services.greetd.enableGnomeKeyring = true;
-  security.pam.services.cosmic-greeter.enableGnomeKeyring = true;
+ 
+  security.polkit.enable = true;
+  networking.firewall.checkReversePath = false;
 
   boot.kernelModules = [ "nouveau" "i2c-dev" "i2c-piix4" ];
 
@@ -127,6 +128,8 @@
     isNormalUser = true;
     extraGroups = [ "wheel" ];
   };
+
+  users.users.a_.extraGroups = [ "networkmanager" ];
 
   # Use the GRUB 2 boot loader.
   # boot.loader.grub.enable = true;
