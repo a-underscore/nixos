@@ -12,6 +12,9 @@
 
   environment.pathsToLink = [ "/libexec" ]; # links /libexec from derivations to /run/current-system/sw
   environment.systemPackages = with pkgs; [
+  	prismlauncher
+	ollama
+  	blender
   	caffeine-ng
 	wget
   	zed-editor
@@ -31,18 +34,20 @@
   	wireguard-tools
 	networkmanager-openvpn
 	protonvpn-gui
+	openrgb-with-all-plugins
   ];
-
+  
+  programs.flashrom.enable = true;
+  
   security.polkit.enable = true;
   networking.firewall.checkReversePath = false;
-
-  boot.kernelModules = [ "nvidia" ];
 
   services.hardware.openrgb.enable = true;
 
   programs.nix-ld.enable = true;
 
   services.udev.enable = true;
+
   services.xserver = {
     enable = true;
     videoDrivers = [ "nvidia" ];
@@ -56,15 +61,7 @@
     # };
   };
 
-  # Enable hardware acceleration for Nouveau
-  hardware.graphics = {
-    enable = true;
-    extraPackages = with pkgs; [
-      # Add packages needed for Nouveau acceleration here
-      # For example, Mesa for OpenGL:
-      mesa
-    ];
-  };
+  boot.kernelModules = [ "nvidia" ];
 
   hardware.nvidia = {
 
@@ -102,6 +99,16 @@
   # environment.etc."modprobe.d/nouveau.conf".text = ''
   #   options nouveau modeset=1
   # '';
+  /*
+  # Enable hardware acceleration for Nouveau
+  hardware.graphics = {
+    enable = true;
+    extraPackages = with pkgs; [
+      # Add packages needed for Nouveau acceleration here
+      # For example, Mesa for OpenGL:
+      mesa
+    ];
+  };*/
 
   nix.settings.experimental-features = [
   	"nix-command"
@@ -154,7 +161,7 @@
     extraGroups = [ "wheel" ];
   };
 
-  users.users.a_.extraGroups = [ "networkmanager" ];
+  users.users.a_.extraGroups = [ "adbusers" "networkmanager" ];
 
   # Use the GRUB 2 boot loader.
   # boot.loader.grub.enable = true;
