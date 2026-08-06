@@ -38,7 +38,7 @@
   ];
   
   programs.flashrom.enable = true;
-  
+
   security.polkit.enable = true;
   networking.firewall.checkReversePath = false;
 
