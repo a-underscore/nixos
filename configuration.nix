@@ -12,6 +12,11 @@
 
   environment.pathsToLink = [ "/libexec" ]; # links /libexec from derivations to /run/current-system/sw
   environment.systemPackages = with pkgs; [
+  	kdePackages.kdenlive
+	godot-mono
+  	obs-studio
+  	dotnet-sdk
+  	krita
   	prismlauncher
 	ollama
   	blender
@@ -35,9 +40,12 @@
 	networkmanager-openvpn
 	protonvpn-gui
 	openrgb-with-all-plugins
+	gamescope
   ];
-  
+
   programs.flashrom.enable = true;
+	
+  programs.steam.enable = true;
 
   security.polkit.enable = true;
   networking.firewall.checkReversePath = false;
@@ -62,6 +70,7 @@
   };
 
   boot.kernelModules = [ "nvidia" ];
+  boot.kernelPackages = pkgs.linuxPackages_xanmod;
 
   hardware.nvidia = {
 
