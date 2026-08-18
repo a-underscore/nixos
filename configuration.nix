@@ -13,6 +13,7 @@
   environment.pathsToLink = [ "/libexec" ]; # links /libexec from derivations to /run/current-system/sw
   environment.systemPackages = with pkgs; [
   	kdePackages.kdenlive
+	vscode
 	godot-mono
   	obs-studio
   	dotnet-sdk
@@ -42,6 +43,8 @@
 	openrgb-with-all-plugins
 	gamescope
   ];
+
+  environment.variables.DOTNET_ROOT = "${pkgs.dotnet-sdk}/share/dotnet";
 
   programs.flashrom.enable = true;
 	
