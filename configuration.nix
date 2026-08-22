@@ -13,6 +13,7 @@
   environment.pathsToLink = [ "/libexec" ]; # links /libexec from derivations to /run/current-system/sw
   environment.systemPackages = with pkgs; [
   	kdePackages.kdenlive
+	cisco-packet-tracer_9
 	vscode
 	godot-mono
   	obs-studio
@@ -145,7 +146,12 @@
     "image/*" = "imv.desktop";
   };
 
-  users.users."a_" = {
+  swapDevices = [{
+    device = "/swapfile";
+    size = 16 * 1024; # 16 GiB
+  }];
+
+  users.users.a_ = {
     packages = with pkgs; [
       flatpak
     ];
