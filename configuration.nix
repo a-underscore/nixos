@@ -146,10 +146,7 @@
     "image/*" = "imv.desktop";
   };
 
-  swapDevices = [{
-    device = "/swapfile";
-    size = 16 * 1024; # 16 GiB
-  }];
+  swapDevices = [ { device = "/dev/zvol/zpool/swap"; } ];
 
   users.users.a_ = {
     packages = with pkgs; [
