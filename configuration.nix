@@ -47,6 +47,7 @@
   ];
 
   environment.variables.DOTNET_ROOT = "${pkgs.dotnet-sdk}/share/dotnet";
+  environment.sessionVariables.LD_LIBRARY_PATH = [ "/run/current-system/sw/lib" ];
 
   programs.flashrom.enable = true;
 	
