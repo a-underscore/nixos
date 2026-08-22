@@ -13,6 +13,7 @@
   environment.pathsToLink = [ "/libexec" ]; # links /libexec from derivations to /run/current-system/sw
   environment.systemPackages = with pkgs; [
   	kdePackages.kdenlive
+	icu
 	cisco-packet-tracer_9
 	vscode
 	godot-mono
