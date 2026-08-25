@@ -6,36 +6,73 @@
 
 {
   imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-    ];
-      environment.pathsToLink = [ "/libexec" ]; # links /libexec from derivations to /run/current-system/sw
+	[ # Include the results of the hardware scan.
+		./hardware-configuration.nix
+	];
+
+  environment.pathsToLink = [ "/libexec" ]; # links /libexec from derivations to /run/current-system/sw
   environment.systemPackages = with pkgs; [
+  	kdePackages.kdenlive
+	icu
+	vscode
+	nomacs
+	godot-mono
+  	obs-studio
+  	dotnet-sdk
+  	krita
+  	prismlauncher
+	ollama
+  	blender
+  	caffeine-ng
+	wget
   	zed-editor
+	python3
+	seahorse
   	lua
+	gocryptfs
  	fastfetch
 	neovim
-	#i3
 	alacritty
 	unzip
 	zip
 	git
 	acpi
-	vscode
+	rustup
+	nodejs
+  	wireguard-tools
+	networkmanager-openvpn
+	protonvpn-gui
+	openrgb-with-all-plugins
+	gamescope
   ];
+
+  environment.variables.DOTNET_ROOT = "${pkgs.dotnet-sdk}/share/dotnet";
+  environment.sessionVariables.LD_LIBRARY_PATH = [ "/run/current-system/sw/lib" ];
+
+   swapDevices = [ { device = "/dev/zvol/zpool/swap"; } ];
 
    boot.kernelModules = [ "nouveau" "i2c-dev" "i2c-piix4" ];
    boot.blacklistedKernelModules = [ "nvidia" "nvidia_uvm" "nvidia_drm" "nvidia_modeset" ];
+   boot.kernelParams = [ "iomem=relaxed" ];
+   boot.kernelPackages = pkgs.linuxPackages_xanmod;
+
+   programs.flashrom.enable = true;
+
+  security.polkit.enable = true;
+  networking.firewall.checkReversePath = false;
+
+  services.hardware.openrgb.enable = true;
+
+  programs.nix-ld.enable = true;
+
+  services.udev.enable = true;
 
   nix.settings.experimental-features = [
   	"nix-command"
   	"flakes"
   ];
 
-
-   nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
-      "vscode"
-    ];
+   nixpkgs.config.allowUnfree = true;
 
   services.flatpak.enable = true;
 
@@ -45,7 +82,6 @@
       xdg-desktop-portal-gtk
     ];
   };
-
 
 
    programs = {
@@ -128,7 +164,7 @@
   services.displayManager.defaultSession = "none+cosmic";
   */
 
-    services.displayManager.cosmic-greeter.enable = true;
+  services.displayManager.cosmic-greeter.enable = true;
 
   services.desktopManager.cosmic.enable = true;
 
@@ -218,33 +254,6 @@
   #
   # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
   system.stateVersion = "25.11"; # Did you read the comment?
-
-  programs.nix-ld.enable = true;
-    programs.nix-ld.libraries = with pkgs; [
-    # Add any missing dynamic libraries for unpackaged programs
-    # here, NOT in environment.systemPackages
-        # General libraries
-    stdenv.cc.cc
-  zlib
-  openssl
-  xorg.libX11
-  xorg.libXcursor
-  xorg.libXi
-  xorg.libXrandr
-  xorg.libXrender
-  xorg.libXext
-  libGL
-  fontconfig
-  vulkan-loader
-  alsa-lib
-  pulseaudio
-  udev
-  icu
-  icu.dev
-  mono
-    # Add other dependencies if Godot complains, such as
-    # zlib, openssl, xz, util-linux
-  ];
 
   # boot.zfs.extraPools = [ "zpool" ];
 }
