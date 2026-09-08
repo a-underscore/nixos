@@ -13,6 +13,7 @@
   environment.pathsToLink = [ "/libexec" ]; # links /libexec from derivations to /run/current-system/sw
   environment.systemPackages = with pkgs; [
   	kdePackages.kdenlive
+	screen
 	icu
 	vscode
 	nomacs
@@ -41,20 +42,24 @@
 	nodejs
   	wireguard-tools
 	networkmanager-openvpn
-	protonvpn-gui
+	proton-vpn
 	openrgb-with-all-plugins
 	gamescope
   ];
 
+  boot.zfs.forceImportRoot = false;
   environment.variables.DOTNET_ROOT = "${pkgs.dotnet-sdk}/share/dotnet";
   environment.sessionVariables.LD_LIBRARY_PATH = [ "/run/current-system/sw/lib" ];
 
    swapDevices = [ { device = "/dev/zvol/zpool/swap"; } ];
 
+   programs.steam.enable = true;
+
    boot.kernelModules = [ "nouveau" "i2c-dev" "i2c-piix4" ];
    boot.blacklistedKernelModules = [ "nvidia" "nvidia_uvm" "nvidia_drm" "nvidia_modeset" ];
    boot.kernelParams = [ "iomem=relaxed" ];
    boot.kernelPackages = pkgs.linuxPackages_xanmod;
+   boot.loader.grub.configurationLimit = 5;
 
    programs.flashrom.enable = true;
 
@@ -66,7 +71,7 @@
   programs.nix-ld.enable = true;
 
   services.udev.enable = true;
-
+ 
   nix.settings.experimental-features = [
   	"nix-command"
   	"flakes"
@@ -101,7 +106,7 @@
   users.extraUsers.a_ = {
     shell = pkgs.zsh;
     isNormalUser = true;
-    extraGroups = [ "wheel" ];
+    extraGroups = [ "wheel" "dialout" ];
   };
 
   # Use the GRUB 2 boot loader.
