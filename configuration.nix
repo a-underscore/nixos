@@ -14,6 +14,7 @@
   environment.systemPackages = with pkgs; [
   	kdePackages.kdenlive
 	icu
+	nomacs
 	cisco-packet-tracer_9
 	vscode
 	godot-mono
@@ -41,13 +42,19 @@
 	nodejs
   	wireguard-tools
 	networkmanager-openvpn
-	protonvpn-gui
+	proton-vpn
 	openrgb-with-all-plugins
 	gamescope
   ];
 
+  boot.zfs.forceImportRoot = false;
+
+  hardware.enableAllFirmware = true;
+
   environment.variables.DOTNET_ROOT = "${pkgs.dotnet-sdk}/share/dotnet";
   environment.sessionVariables.LD_LIBRARY_PATH = [ "/run/current-system/sw/lib" ];
+
+  boot.extraModulePackages = with config.boot.kernelPackages; [ rtw88 ];
 
   programs.flashrom.enable = true;
 	
